@@ -9,11 +9,11 @@ import UIKit
 
 class ProfileHeaderView: UIView, UITextFieldDelegate {
     
-    var viewForImage: UIView!
-    var button: UIButton!
+    var avatarImageView: UIView!
+    var fullNameLabel: UILabel!
     var statusLabel: UILabel!
-    var nameLabel: UILabel!
-    var textField: UITextField!
+    var statusTextField: UITextField!
+    var setStatusButton: UIButton!
     
     private var statusText: String = ""
     
@@ -28,10 +28,14 @@ class ProfileHeaderView: UIView, UITextFieldDelegate {
     
     func settings() {
         
-        viewForImage = {
-            // настройка вью с котиком
-            // размер вью в макете не указан выставил на глаз
-            let viewForImage = UIView(frame: CGRect(x: 16, y: 80, width: 110, height: 110))
+        avatarImageView = {
+            let viewForImage = UIView(frame: .zero)
+            viewForImage.translatesAutoresizingMaskIntoConstraints = false
+            self.addSubview(viewForImage)
+            NSLayoutConstraint.activate([viewForImage.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 16),
+                                         viewForImage.topAnchor.constraint(equalTo: self.topAnchor, constant: 16),
+                                         viewForImage.widthAnchor.constraint(equalToConstant: 110),
+                                         viewForImage.heightAnchor.constraint(equalToConstant: 110)])
             viewForImage.layer.cornerRadius = 55
             viewForImage.layer.borderWidth = 3
             viewForImage.layer.borderColor = UIColor.white.cgColor
@@ -42,45 +46,63 @@ class ProfileHeaderView: UIView, UITextFieldDelegate {
             return viewForImage
         }()
         
-        button = {
-            // настройка кнопки
-            let button = UIButton(frame: CGRect(x: 16, y: 231, width: self.frame.maxX - 32, height: 50))
-            button.layer.backgroundColor = UIColor.systemBlue.cgColor
-            // в макете указан cornerRadius = 4 по факту около 13
-            button.layer.cornerRadius = 13
-            // настройки тени в макете также не сответствуют в цифрах и по фактку, не стал подгонять
-            button.layer.shadowOffset = CGSize(width: 4, height: 4)
-            button.layer.shadowRadius = 4
-            button.layer.shadowColor = UIColor.black.cgColor
-            button.layer.shadowOpacity = 0.7
-            // Font кнопки в макете ни как не указан
-            button.setTitle("Show status", for: .normal)
-            button.setTitleColor(.white, for: .normal)
-            return button
-        }()
-        
-        statusLabel = {
-            // настройки лейбла со статусом
-            // в макете не указана высота лейбла задал 14 как размер font
-            let statusLabel = UILabel(frame: CGRect(x: 142, y: 158, width: self.frame.maxX - 142 - 16, height: 16))
-            statusLabel.text = "Wating for something..."
-            statusLabel.textColor = UIColor.gray
-            statusLabel.font = UIFont.systemFont(ofSize: CGFloat(14), weight: .regular)
-            return statusLabel
-        }()
-        
-        nameLabel = {
-            // настройки лейбла со именем
-            let nameLabel = UILabel(frame: CGRect(x: 142, y: 91, width: self.frame.maxX - 142 - 16, height: 18))
+        fullNameLabel = {
+            let nameLabel = UILabel(frame: .zero)
+            nameLabel.translatesAutoresizingMaskIntoConstraints = false
+            self.addSubview(nameLabel)
+            NSLayoutConstraint.activate([nameLabel.leadingAnchor.constraint(equalTo: avatarImageView.trailingAnchor, constant: 16),
+                                         nameLabel.topAnchor.constraint(equalTo: self.topAnchor, constant: 27),
+                                         nameLabel.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -16),
+                                         nameLabel.heightAnchor.constraint(equalToConstant: 18)])
             nameLabel.text = "Itchy Cat"
             nameLabel.textColor = UIColor.black
             nameLabel.font = UIFont.systemFont(ofSize: CGFloat(18), weight: .bold)
             return nameLabel
         }()
         
-        textField = {
-            //настройки textField
-            let textField = UITextField(frame: CGRect(x: 142, y: 180, width: self.frame.maxX - 142 - 16, height: 40))
+        setStatusButton = {
+            let button = UIButton(frame: .zero)
+            button.translatesAutoresizingMaskIntoConstraints = false
+            self.addSubview(button)
+            NSLayoutConstraint.activate([button.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 16),
+                                         button.topAnchor.constraint(equalTo: avatarImageView.bottomAnchor, constant: 56),
+                                         button.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -16),
+                                         button.heightAnchor.constraint(equalToConstant: 50)])
+            button.layer.backgroundColor = UIColor.systemBlue.cgColor
+            button.layer.cornerRadius = 13
+            button.layer.shadowOffset = CGSize(width: 4, height: 4)
+            button.layer.shadowRadius = 4
+            button.layer.shadowColor = UIColor.black.cgColor
+            button.layer.shadowOpacity = 0.7
+            button.setTitle("Show status", for: .normal)
+            button.setTitleColor(.white, for: .normal)
+            return button
+        }()
+        
+        statusLabel = {
+            let statusLabel = UILabel(frame: .zero)
+            statusLabel.translatesAutoresizingMaskIntoConstraints = false
+            self.addSubview(statusLabel)
+            NSLayoutConstraint.activate([statusLabel.leadingAnchor.constraint(equalTo: avatarImageView.trailingAnchor, constant: 16),
+                                         statusLabel.bottomAnchor.constraint(equalTo: setStatusButton.topAnchor, constant: -74),
+                                         statusLabel.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -16),
+                                         statusLabel.heightAnchor.constraint(equalToConstant: 14)])
+            statusLabel.text = "Wating for something..."
+            statusLabel.textColor = UIColor.gray
+            statusLabel.font = UIFont.systemFont(ofSize: CGFloat(14), weight: .regular)
+            return statusLabel
+        }()
+        
+   
+        
+        statusTextField = {
+            let textField = UITextField(frame: .zero)
+            textField.translatesAutoresizingMaskIntoConstraints = false
+            self.addSubview(textField)
+            NSLayoutConstraint.activate([textField.leadingAnchor.constraint(equalTo: avatarImageView.trailingAnchor, constant: 16),
+                                         textField.bottomAnchor.constraint(equalTo: setStatusButton.topAnchor, constant: -20),
+                                         textField.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -16),
+                                         textField.heightAnchor.constraint(equalToConstant: 40)])
             textField.layer.borderWidth = 1
             textField.layer.borderColor = UIColor.black.cgColor
             textField.layer.cornerRadius = 12
@@ -91,31 +113,17 @@ class ProfileHeaderView: UIView, UITextFieldDelegate {
         }()
         
         
-        // добавляем кнопку
-        self.addSubview(button)
-        // добавляем вью с котиком
-        self.addSubview(viewForImage)
-        // добавляем statusLabel
-        self.addSubview(statusLabel)
-        // добавляем nameLabel
-        self.addSubview(nameLabel)
-        // добавляем textField
-        self.addSubview(textField)
-        
         //
-        self.textField.delegate = self
+        self.statusTextField.delegate = self
         
-        // добавляем таргет
-        button.addTarget(self, action: #selector(buttonPressed), for: .touchUpInside)
-        textField.addTarget(self, action: #selector(statusTextChanged), for: .editingChanged)
+        setStatusButton.addTarget(self, action: #selector(buttonPressed), for: .touchUpInside)
+        statusTextField.addTarget(self, action: #selector(statusTextChanged), for: .editingChanged)
     }
     
-    
-    // обработчик таргета
     @objc
     func buttonPressed() {
-        if textField.text != nil {
-            statusLabel.text = textField.text
+        if statusTextField.text != nil {
+            statusLabel.text = statusTextField.text
         }
     }
     

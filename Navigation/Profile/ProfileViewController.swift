@@ -12,6 +12,7 @@ class ProfileViewController: UIViewController {
     // let profileHeaderView = ProfileHeaderView(frame: CGRect())
      
     var profileHeaderView = ProfileHeaderView()
+    var button = UIButton()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -19,24 +20,38 @@ class ProfileViewController: UIViewController {
         self.navigationController?.navigationBar.backgroundColor = UIColor.white
         self.navigationItem.title = "Profile"
         
-        
-        
-        profileHeaderView = ProfileHeaderView(frame: CGRect(x: 0, y: 0, width: Int(self.view.frame.maxX), height: Int(self.view.frame.maxY)))
-        // в макете указан цвет .gray но по факту это явно .systemGray4 - пришлось сделать systemGray5
-        // что бы не сливаться с клавиатурой и не засвечивать цвет текста статуса
-        view.backgroundColor = UIColor.systemGray5
-        
-        //profileHeaderView.frame = view.frame
-
+        profileHeaderView = ProfileHeaderView(frame: .zero)
+        profileHeaderView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(profileHeaderView)
+        NSLayoutConstraint.activate([profileHeaderView.leadingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leadingAnchor, constant: 0),
+                                     profileHeaderView.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor, constant: 0),
+                                     profileHeaderView.trailingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.trailingAnchor, constant: 0),
+                                     profileHeaderView.heightAnchor.constraint(equalToConstant: 220)
+                                    ])
         
-    }
+        view.backgroundColor = UIColor.systemGray5
     
-    override func viewWillLayoutSubviews() {
-        super.viewWillLayoutSubviews()
-
-        // profileHeaderView.frame = view.frame
-        //profileHeaderView.settings()
+        button = {
+            let button = UIButton(frame: .zero)
+            button.translatesAutoresizingMaskIntoConstraints = false
+            view.addSubview(button)
+            NSLayoutConstraint.activate([button.leadingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leadingAnchor, constant: 0),
+                                         button.trailingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.trailingAnchor, constant: 0),
+                                         button.heightAnchor.constraint(equalToConstant: 50),
+                                         button.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor, constant: 0)])
+            button.layer.backgroundColor = UIColor.systemBlue.cgColor
+            button.layer.cornerRadius = 13
+            button.layer.shadowOffset = CGSize(width: 4, height: 4)
+            button.layer.shadowRadius = 4
+            button.layer.shadowColor = UIColor.black.cgColor
+            button.layer.shadowOpacity = 0.7
+            button.setTitle("Непонятно зачем нужная кнопка", for: .normal)
+            button.setTitleColor(.white, for: .normal)
+            return button
+        }()
     }
 
+    override func viewWillLayoutSubviews() {
+
+    }
 }
