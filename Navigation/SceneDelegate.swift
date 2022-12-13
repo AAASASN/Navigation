@@ -53,7 +53,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     
     // напишем функцию которая будет возвращать второй UINavigationController
     func createSecondNavigationController() -> UINavigationController {
-        let someNavigationController = UINavigationController(rootViewController: ProfileViewController())
+        let someNavigationController = UINavigationController(rootViewController: LogInViewController())
         // у UINavigationController есть свойство .tabBarItem которое будет передано в UITabBarController
         someNavigationController.tabBarItem = UITabBarItem(title: "Профиль", image: UIImage(systemName: "person.crop.circle"), tag: 1)
         return someNavigationController

@@ -8,15 +8,14 @@
 import UIKit
 
 class ProfileViewController: UIViewController {
-    
-    // let profileHeaderView = ProfileHeaderView(frame: CGRect())
-     
+         
     var profileHeaderView = ProfileHeaderView()
     var button = UIButton()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        self.navigationController?.navigationBar.isHidden = false
         self.navigationController?.navigationBar.backgroundColor = UIColor.white
         self.navigationItem.title = "Profile"
         
