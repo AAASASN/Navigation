@@ -48,12 +48,12 @@ class LogInViewController: UIViewController {
             self.navigationController?.pushViewController(profileViewController, animated: true)
         }), for: .touchUpInside)
         
-        registerForKeyboardNotifications()
-        
         tap = UITapGestureRecognizer(target: self, action: #selector(self.dismissKeyboard))
     }
     
     override func viewWillAppear(_ animated: Bool) {
+        
+        registerForKeyboardNotifications()
         
         viewWillLayoutSubviews()
 
@@ -68,6 +68,10 @@ class LogInViewController: UIViewController {
         self.navigationController?.navigationBar.isHidden = true
         self.scrollView.contentSize = CGSize(width: self.view.frame.maxX, height: 522 - self.view.safeAreaInsets.top)
         
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        removeKeyboardNotifications()
     }
     
     override func didRotate(from fromInterfaceOrientation: UIInterfaceOrientation) {
@@ -113,6 +117,12 @@ extension LogInViewController {
         // ... будет реагировать на начало изчезновения клавиатуры
         NotificationCenter.default.addObserver(self, selector: #selector(kbWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
 
+    }
+    
+    // удаление наблюдателей когда они уже не нужны
+    func removeKeyboardNotifications() {
+    NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillShowNotification, object: nil)
+    NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillHideNotification, object: nil)
     }
 
     // функция вычисляет размер сдвига и обращась к scrollView задает растояние сдвига contentOffset
