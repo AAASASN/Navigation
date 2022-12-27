@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		1104DDBA2947930E006F0C7A /* LogInViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1104DDB92947930E006F0C7A /* LogInViewController.swift */; };
+		110C6808295A32660039B147 /* Post.swift in Sources */ = {isa = PBXBuildFile; fileRef = 110C6807295A32660039B147 /* Post.swift */; };
+		110C680A295A3F570039B147 /* PostTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 110C6809295A3F570039B147 /* PostTableViewCell.swift */; };
 		1182AF1D293AB9DE00688586 /* ProfileHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1182AF1C293AB9DE00688586 /* ProfileHeaderView.swift */; };
 		1182AF21293BBAF700688586 /* Extentions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1182AF20293BBAF700688586 /* Extentions.swift */; };
 		11BF0609294881B0006B6CC0 /* MyScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11BF0608294881B0006B6CC0 /* MyScrollView.swift */; };
@@ -18,12 +20,14 @@
 		11D5C4BB292E75A50073DB91 /* FeedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11D5C4BA292E75A50073DB91 /* FeedViewController.swift */; };
 		11D5C4BD292E75DD0073DB91 /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11D5C4BC292E75DD0073DB91 /* ProfileViewController.swift */; };
 		11D5C4C1292E81A20073DB91 /* PostViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11D5C4C0292E81A20073DB91 /* PostViewController.swift */; };
-		11D5C4C3292E93D30073DB91 /* Post.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11D5C4C2292E93D30073DB91 /* Post.swift */; };
+		11D5C4C3292E93D30073DB91 /* SomePost.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11D5C4C2292E93D30073DB91 /* SomePost.swift */; };
 		11D5C4C5292EA0F10073DB91 /* InfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11D5C4C4292EA0F10073DB91 /* InfoViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		1104DDB92947930E006F0C7A /* LogInViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogInViewController.swift; sourceTree = "<group>"; };
+		110C6807295A32660039B147 /* Post.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Post.swift; sourceTree = "<group>"; };
+		110C6809295A3F570039B147 /* PostTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostTableViewCell.swift; sourceTree = "<group>"; };
 		1182AF1C293AB9DE00688586 /* ProfileHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileHeaderView.swift; sourceTree = "<group>"; };
 		1182AF20293BBAF700688586 /* Extentions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extentions.swift; sourceTree = "<group>"; };
 		11BF0608294881B0006B6CC0 /* MyScrollView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyScrollView.swift; sourceTree = SOURCE_ROOT; };
@@ -36,7 +40,7 @@
 		11D5C4BA292E75A50073DB91 /* FeedViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedViewController.swift; sourceTree = "<group>"; };
 		11D5C4BC292E75DD0073DB91 /* ProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
 		11D5C4C0292E81A20073DB91 /* PostViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostViewController.swift; sourceTree = "<group>"; };
-		11D5C4C2292E93D30073DB91 /* Post.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Post.swift; sourceTree = "<group>"; };
+		11D5C4C2292E93D30073DB91 /* SomePost.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SomePost.swift; sourceTree = "<group>"; };
 		11D5C4C4292EA0F10073DB91 /* InfoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfoViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -57,6 +61,8 @@
 				11BF0608294881B0006B6CC0 /* MyScrollView.swift */,
 				1182AF1C293AB9DE00688586 /* ProfileHeaderView.swift */,
 				11D5C4BC292E75DD0073DB91 /* ProfileViewController.swift */,
+				110C6809295A3F570039B147 /* PostTableViewCell.swift */,
+				110C6807295A32660039B147 /* Post.swift */,
 				1182AF20293BBAF700688586 /* Extentions.swift */,
 				1104DDB92947930E006F0C7A /* LogInViewController.swift */,
 			);
@@ -84,7 +90,7 @@
 			children = (
 				1182AF1B293AB98700688586 /* Profile */,
 				11D5C4C4292EA0F10073DB91 /* InfoViewController.swift */,
-				11D5C4C2292E93D30073DB91 /* Post.swift */,
+				11D5C4C2292E93D30073DB91 /* SomePost.swift */,
 				11D5C4A6292E6B090073DB91 /* AppDelegate.swift */,
 				11D5C4A8292E6B090073DB91 /* SceneDelegate.swift */,
 				11D5C4BA292E75A50073DB91 /* FeedViewController.swift */,
@@ -168,10 +174,12 @@
 			files = (
 				11D5C4A7292E6B090073DB91 /* AppDelegate.swift in Sources */,
 				11D5C4BD292E75DD0073DB91 /* ProfileViewController.swift in Sources */,
+				110C680A295A3F570039B147 /* PostTableViewCell.swift in Sources */,
 				11D5C4BB292E75A50073DB91 /* FeedViewController.swift in Sources */,
+				110C6808295A32660039B147 /* Post.swift in Sources */,
 				11D5C4C5292EA0F10073DB91 /* InfoViewController.swift in Sources */,
 				11BF0609294881B0006B6CC0 /* MyScrollView.swift in Sources */,
-				11D5C4C3292E93D30073DB91 /* Post.swift in Sources */,
+				11D5C4C3292E93D30073DB91 /* SomePost.swift in Sources */,
 				11D5C4A9292E6B090073DB91 /* SceneDelegate.swift in Sources */,
 				11D5C4C1292E81A20073DB91 /* PostViewController.swift in Sources */,
 				1182AF1D293AB9DE00688586 /* ProfileHeaderView.swift in Sources */,

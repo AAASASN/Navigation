@@ -109,6 +109,7 @@ class ProfileHeaderView: UIView, UITextFieldDelegate {
             textField.font = UIFont.systemFont(ofSize: CGFloat(15), weight: .regular)
             textField.layer.backgroundColor = UIColor.white.cgColor
             textField.indent(size: 8)
+            textField.placeholder = "Set your status..."
             return textField
         }()
         

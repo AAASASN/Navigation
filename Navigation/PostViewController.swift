@@ -9,7 +9,7 @@ import UIKit
 
 class PostViewController: UIViewController {
 
-    var localVarPost = Post()
+    var localVarPost = SomePost()
     
     override func viewDidLoad() {
         super.viewDidLoad()

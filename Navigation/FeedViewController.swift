@@ -10,7 +10,7 @@ import UIKit
 class FeedViewController: UIViewController {
 
     
-    var post = Post()
+    var post = SomePost()
     
     override func viewDidLoad() {
         super.viewDidLoad()
