@@ -1,121 +1,15 @@
 //
-//  ProfileViewController.swift
+//  PostArray.swift
 //  Navigation
 //
-//  Created by Александр Мараенко on 23.11.2022.
+//  Created by Александр Мараенко on 28.12.2022.
 //
 
-import UIKit
+import Foundation
 
-class ProfileViewController: UIViewController {
+class PostArray {
     
-    var postArray: [Post]!
-    var tableView: UITableView!
-    var tap: UITapGestureRecognizer! = nil
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        
-        self.navigationController?.navigationBar.isHidden = false
-        self.navigationController?.navigationBar.backgroundColor = UIColor.white
-        self.navigationItem.title = "Profile"
-        
-        postArray = createPostArray()
-        
-        tableView = UITableView(frame: .zero)
-        tableView.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(tableView)
-        NSLayoutConstraint.activate([tableView.topAnchor.constraint(equalTo: view.topAnchor),
-                                     tableView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
-                                     tableView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
-                                     tableView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
-                                    ])
-        
-        tableView.backgroundColor = .white
-        tableView.separatorInset.left = .zero
-
-        tableView.delegate = self
-        tableView.dataSource = self
-        
-        tap = UITapGestureRecognizer(target: self, action: #selector(self.dismissKeyboard))
-        
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        registerForKeyboardNotifications()
-    }
-    
-    override func viewWillDisappear(_ animated: Bool) {
-        removeKeyboardNotifications()
-    }
-    
-}
-
-
-
-// MARK: - UITableViewDelegate  UITableViewDataSource
-extension ProfileViewController: UITableViewDelegate, UITableViewDataSource {
-    
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        postArray.count
-    }
-    
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = PostTableViewCell()
-        cell.cellSetting()
-        cell.authorLabel.text = postArray[indexPath.row].author
-        cell.imageViewForPicture.image = UIImage(named: postArray[indexPath.row].image)
-        cell.descriptionLabel.text = postArray[indexPath.row].description
-        cell.likesLabel.text = "Likes: \(postArray[indexPath.row].likes)" 
-        cell.viewsLabel.text = "Views: \(postArray[indexPath.row].views)"
-
-        cell.selectionStyle = .none
-        return cell
-    }
-    
-    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        let profileHeaderView = ProfileHeaderView(frame: .zero)
-        profileHeaderView.backgroundColor = .white
-        return  profileHeaderView
-    }
-    
-    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return 250
-    }
-    
-}
-
-// это расширение возволяет скрыть клавиатуру при косании вне TextField.
-extension ProfileViewController {
-    
-    func registerTapGestureRecognizerForHideKeyboard() {
-        tableView.addGestureRecognizer(tap)
-    }
-    
-    @objc func dismissKeyboard() {
-        tableView.endEditing(true)
-        tableView.removeGestureRecognizer(tap)
-    }
-    
-    func registerForKeyboardNotifications() {
-        NotificationCenter.default.addObserver(self, selector: #selector(kbWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
-    }
-    
-    func removeKeyboardNotifications() {
-        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillShowNotification, object: nil)
-    }
-    
-    @objc func kbWillShow(_ notification: Notification) {
-        registerTapGestureRecognizerForHideKeyboard()
-    }
-}
-
-
-
-// MARK: - createPostArray()
-extension ProfileViewController {
-    
-    func createPostArray() -> [Post] {
+    static func createPostArray() -> [Post] {
         var postArray = [Post]()
         let post1 = Post(author: "Яндекс",
                          description: "Яндекс круглый год приглашает студентов и выпускников вузов поучаствовать в программе стажировки. Можно от 3 до 6 месяцев работать над важными и сложными задачами вместе с коллегами в Яндексе, чтобы набраться опыта. И получить возможность стать сотрудником в штате.",

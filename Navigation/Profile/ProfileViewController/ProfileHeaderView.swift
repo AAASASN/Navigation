@@ -21,7 +21,7 @@ class ProfileHeaderView: UIView, UITextFieldDelegate {
         super.init(frame: frame)
         self.settings()
     }
-    
+        
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -38,7 +38,7 @@ class ProfileHeaderView: UIView, UITextFieldDelegate {
                                          viewForImage.heightAnchor.constraint(equalToConstant: 110)])
             viewForImage.layer.cornerRadius = 55
             viewForImage.layer.borderWidth = 3
-            viewForImage.layer.borderColor = UIColor.white.cgColor
+            viewForImage.layer.borderColor = UIColor.systemGray5.cgColor
             let imageView = UIImageView(image: UIImage(named: "cat3"))
             imageView.frame = CGRect(x: 3, y: 3, width: 104, height: 104)
             viewForImage.clipsToBounds = true
@@ -67,7 +67,8 @@ class ProfileHeaderView: UIView, UITextFieldDelegate {
             NSLayoutConstraint.activate([button.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 16),
                                          button.topAnchor.constraint(equalTo: avatarImageView.bottomAnchor, constant: 56),
                                          button.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -16),
-                                         button.heightAnchor.constraint(equalToConstant: 50)])
+                                         button.heightAnchor.constraint(equalToConstant: 50),
+                                         button.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -20)])
             button.layer.backgroundColor = UIColor.systemBlue.cgColor
             button.layer.cornerRadius = 13
             button.layer.shadowOffset = CGSize(width: 4, height: 4)
@@ -92,9 +93,7 @@ class ProfileHeaderView: UIView, UITextFieldDelegate {
             statusLabel.font = UIFont.systemFont(ofSize: CGFloat(14), weight: .regular)
             return statusLabel
         }()
-        
-   
-        
+                
         statusTextField = {
             let textField = UITextField(frame: .zero)
             textField.translatesAutoresizingMaskIntoConstraints = false
@@ -113,8 +112,6 @@ class ProfileHeaderView: UIView, UITextFieldDelegate {
             return textField
         }()
         
-        
-        //
         self.statusTextField.delegate = self
         
         setStatusButton.addTarget(self, action: #selector(buttonPressed), for: .touchUpInside)
