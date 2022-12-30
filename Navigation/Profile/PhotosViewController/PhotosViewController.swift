@@ -35,6 +35,8 @@ class PhotosViewController: UIViewController {
         layout.minimumInteritemSpacing = 8
         layout.itemSize = CGSize(width: (view.bounds.width - 32) / 3, height: 68)
         
+
+        
         collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         
         collectionView.contentInset = UIEdgeInsets(top: 0, left: 8, bottom: 0, right: 8)
@@ -69,3 +71,9 @@ extension PhotosViewController: UICollectionViewDataSource, UICollectionViewDele
     
     
 }
+
+//extension PhotosViewController {
+//    override func didRotate(from fromInterfaceOrientation: UIInterfaceOrientation) {
+//        collectionView.updateConstraints()
+//    }
+//}
