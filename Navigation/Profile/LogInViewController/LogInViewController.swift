@@ -44,8 +44,13 @@ class LogInViewController: UIViewController {
         
         
         scrollView.button.addAction(UIAction(handler: { _ in
-            let profileViewController = ProfileViewController()
-            self.navigationController?.pushViewController(profileViewController, animated: true)
+            if self.scrollView.checkLoginAndPass() {
+                
+                let profileViewController = ProfileViewController()
+                self.navigationController?.pushViewController(profileViewController, animated: true)
+                
+            }
+
         }), for: .touchUpInside)
         
         tap = UITapGestureRecognizer(target: self, action: #selector(self.dismissKeyboard))
