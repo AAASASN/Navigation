@@ -22,6 +22,8 @@ class ProfileHeaderView: UIView, UITextFieldDelegate {
     
     private var statusText: String = ""
     
+    var shakeAnimation = CABasicAnimation()
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         self.settings()
@@ -163,9 +165,23 @@ class ProfileHeaderView: UIView, UITextFieldDelegate {
     
     @objc
     func buttonPressed() {
-        if statusTextField.text != nil {
+        if statusTextField.text == "" {
+            createShakeAnimation(object: statusTextField)
+        } else {
             statusLabel.text = statusTextField.text
         }
+    }
+    
+    func createShakeAnimation(object: AnyObject) {
+        
+        shakeAnimation = CABasicAnimation(keyPath: "position")
+        shakeAnimation.duration = 0.01
+        shakeAnimation.repeatCount = 10
+        shakeAnimation.autoreverses = true
+        shakeAnimation.fromValue = NSValue(cgPoint: CGPointMake(object.center.x - 5, object.center.y))
+        shakeAnimation.toValue = NSValue(cgPoint: CGPointMake(object.center.x + 5, object.center.y))
+        object.layer.add(shakeAnimation, forKey: "position")
+        
     }
     
     @objc
