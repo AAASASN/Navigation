@@ -8,6 +8,13 @@
 import Foundation
 import UIKit
 
+enum ValidationFlag {
+    case ok
+    case nok
+    case invalidEmail
+    case void
+}
+
 class MyScrollView: UIScrollView, UIScrollViewDelegate {
     
     var contentView: UIView!
@@ -17,7 +24,9 @@ class MyScrollView: UIScrollView, UIScrollViewDelegate {
     var loginTextField: UITextField!
     var passTextField: UITextField!
     var line: UIView!
+    
     var labelAboutSixChar: UILabel!
+    var labelAboutWrongLogName: UILabel!
     var button: UIButton!
     
     var shakeAnimation = CABasicAnimation()
@@ -91,7 +100,7 @@ class MyScrollView: UIScrollView, UIScrollViewDelegate {
             loginTextField.textColor = .black
             loginTextField.font = .systemFont(ofSize: 16)
             loginTextField.autocapitalizationType = .none
-            loginTextField.placeholder = "Email or phone"
+            loginTextField.placeholder = "login@example.com"
             NSLayoutConstraint.activate([
                 loginTextField.centerXAnchor.constraint(equalTo: rectForTextFields.centerXAnchor),
                 loginTextField.topAnchor.constraint(equalTo: rectForTextFields.topAnchor, constant: 0),
@@ -110,7 +119,7 @@ class MyScrollView: UIScrollView, UIScrollViewDelegate {
             passTextField.textColor = .black
             passTextField.font = .systemFont(ofSize: 16)
             passTextField.autocapitalizationType = .none
-            passTextField.placeholder = "Password"
+            passTextField.placeholder = "password"
             passTextField.isSecureTextEntry = true
             NSLayoutConstraint.activate([
                 passTextField.centerXAnchor.constraint(equalTo: rectForTextFields.centerXAnchor),
@@ -157,11 +166,34 @@ class MyScrollView: UIScrollView, UIScrollViewDelegate {
             return labelAboutSixChar
         }()
         
+        
+        
+        labelAboutWrongLogName = {
+            let labelAboutWrongLogName = UILabel(frame: .zero)
+            labelAboutWrongLogName.translatesAutoresizingMaskIntoConstraints = false
+            contentView.addSubview(labelAboutWrongLogName)
+            NSLayoutConstraint.activate([
+                labelAboutWrongLogName.topAnchor.constraint(equalTo: loginTextField.bottomAnchor, constant: 8),
+                labelAboutWrongLogName.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
+                labelAboutWrongLogName.heightAnchor.constraint(equalToConstant: 20),
+                labelAboutWrongLogName.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16  ),
+                labelAboutWrongLogName.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16 )
+            ])
+            
+            labelAboutWrongLogName.text = " пароль должен состоять минимум из шести символов"
+            labelAboutWrongLogName.font = .systemFont(ofSize: 12, weight: .light)
+            labelAboutWrongLogName.textColor = .red
+            labelAboutWrongLogName.isHidden = true
+            return labelAboutWrongLogName
+        }()
+        
         // button
         button = {
             let button = UIButton(frame: .zero)
             button.translatesAutoresizingMaskIntoConstraints = false
             contentView.addSubview(button)
+            
+            //  Констрейнты для кнопки
             NSLayoutConstraint.activate([
                 button.topAnchor.constraint(equalTo: rectForTextFields.bottomAnchor, constant: 36),
                 button.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
@@ -169,16 +201,31 @@ class MyScrollView: UIScrollView, UIScrollViewDelegate {
                 button.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16  ),
                 button.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16 )
             ])
+            
+            // Настрйки вида кнопок
             button.layer.backgroundColor = UIColor(red: 0.28, green: 0.52, blue: 0.80, alpha: 1.00).cgColor
             button.layer.cornerRadius = 10
             button.setTitle("Log In", for: .normal)
             button.setTitleColor(.white, for: .normal)
-            rectForTextFields.clipsToBounds = true
+            
+            // rectForTextFields.clipsToBounds = true // ??????
+            
             return button
         }()
         
+        //loginTextField.addTarget(self, action: #selector(loginTextFieldEditingChanged(_:)), for: .editingChanged)
+        passTextField.addTarget(self, action: #selector(passTextFieldEditingChanged(_:)), for: .editingChanged)
+        
     }
     
+
+}
+
+
+// MARK: - passTextField Observer
+extension MyScrollView {
+    
+    // MARK: -
     func createShakeAnimation(object: AnyObject) {
         
         shakeAnimation = CABasicAnimation(keyPath: "position")
@@ -191,41 +238,81 @@ class MyScrollView: UIScrollView, UIScrollViewDelegate {
         
     }
     
-    func checkLoginAndPass() -> Bool {
+    func checkLoginAndPass() -> ValidationFlag {
         
+        // если поля пустые трясем их
         if loginTextField.text == "" && passTextField.text == "" {
-            
             createShakeAnimation(object: loginTextField)
             createShakeAnimation(object: passTextField)
-            
         } else if loginTextField.text == "" {
-            
             createShakeAnimation(object: loginTextField)
-            
         } else if passTextField.text == ""  {
-            
             createShakeAnimation(object: passTextField)
-            
-        } else if let charCount = passTextField.text?.count  {
-            
-            if charCount > 6 {
-                
-                
-                
-                labelAboutSixChar.isHidden = true
-                return true
-
-            } else {
-                
-                labelAboutSixChar.isHidden = false
-
-            }
-            
+        } else {
+            // если не пустые проверяем логин и пароль а так же формат лонина-емейла
+            return checkLoginAndPassValidate(loginAsEmail: loginTextField.text ?? "", pass: passTextField.text ?? "")
         }
-        
-        return false
+        return .void
     }
     
+    func checkLoginAndPassValidate(loginAsEmail: String, pass: String) -> ValidationFlag {
+
+        let emailRegEx = "([a-z0-9!#$%&'*+-/=?^_`{|}~]){1,64}@([a-z0-9!#$%&'*+-/=?^_`{|}~]){1,64}\\.([a-z0-9]){2,64}"
+        let emailPred = NSPredicate(format:"SELF MATCHES %@", emailRegEx)
+        
+        if !emailPred.evaluate(with: loginAsEmail) {
+            return .invalidEmail
+        } else if loginAsEmail == "roga@kopita.ru" && pass == "12345678" {
+            return .ok
+        } else {
+            return .nok
+        }
+    }
+//
+//
+//    // функция проверяет какие символы введены в текстовые поля
+//    @objc func loginTextFieldEditingChanged(_ textField: UITextField) {
+//
+//    }
     
     
+    // функция проверяет какие символы введены в текстовые поля
+    @objc func passTextFieldEditingChanged(_ textField: UITextField) {
+        
+        // если поле пустое...
+        if passTextField.text?.count ?? 0 == 0 {
+            
+            // ...отображаем лейбл с предупреждением по умолчанию - " пароль должен состоять минимум из шести символов"
+            labelAboutSixChar.text =  " пароль должен состоять минимум из шести символов"
+            labelAboutSixChar.isHidden = true
+        }
+        
+        // если в поле менее шести символов...
+        if passTextField.text?.count ?? 0 < 6 {
+            
+            // деактивируем кнопку
+            button.isEnabled = false
+            
+            // ...считаем количество недостающих символов отображаем лейбл и выводим в него текст
+            let needCharCount = 6 - (passTextField.text?.count ?? 0)
+            labelAboutSixChar.isHidden = false
+            
+            switch needCharCount {
+            case 1: labelAboutSixChar.text = " оставлось ввести 1 символ"
+            case 2: labelAboutSixChar.text = " оставлось ввести 2 символа"
+            case 3: labelAboutSixChar.text = " оставлось ввести 3 символа"
+            case 4: labelAboutSixChar.text = " оставлось ввести 4 символа"
+            case 5: labelAboutSixChar.text = " оставлось ввести 5 символов"
+            // если символов ноль скываем лейбл
+            default:
+                labelAboutSixChar.isHidden = true
+            }
+        }
+        else {
+            // если символов больше пяти скываем/неОтображаем лейбл активируем кнопку
+            labelAboutSixChar.isHidden = true
+            button.isEnabled = true
+        }
+    }
 }
+
