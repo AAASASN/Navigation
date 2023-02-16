@@ -36,14 +36,17 @@ class ProfileViewController: UIViewController {
     }
     
     override func viewWillAppear(_ animated: Bool) {
+        
         self.navigationController?.navigationBar.isHidden = true
         registerForKeyboardNotifications()
+        
     }
     
     override func viewWillDisappear(_ animated: Bool) {
-        tableView.reloadData()
         
+        tableView.reloadData()
         removeKeyboardNotifications()
+        
     }
     
     // MARK: - tableViewSettings
@@ -65,10 +68,10 @@ class ProfileViewController: UIViewController {
         tableView.separatorInset.left = .zero
         tableView.delegate = self
         tableView.dataSource = self
+        
     }
     
 }
-
 
 // MARK: - UITableViewDelegate  UITableViewDataSource
 extension ProfileViewController: UITableViewDelegate, UITableViewDataSource {
@@ -84,6 +87,7 @@ extension ProfileViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        
         var cellForReturn = UITableViewCell()
         
         if indexPath.section == 0 && indexPath.row == 0 {
@@ -92,39 +96,68 @@ extension ProfileViewController: UITableViewDelegate, UITableViewDataSource {
             cell.image2.image = UIImage(named: PhotoGallery.getPhotoArray()[1])
             cell.image3.image = UIImage(named: PhotoGallery.getPhotoArray()[2])
             cell.image4.image = UIImage(named: PhotoGallery.getPhotoArray()[3])
-            
             cellForReturn = cell
         }
         
         if indexPath.section == 1 {
+            
             let cell = PostTableViewCell(style: .default, reuseIdentifier: "PostTableViewCellReuseIdentifier")
+            cell.post = postArray[indexPath.row]
             cell.authorLabel.text = postArray[indexPath.row].author
             cell.imageViewForPicture.image = UIImage(named: postArray[indexPath.row].image)
             cell.descriptionLabel.text = postArray[indexPath.row].description
             cell.likesLabel.text = "Likes: \(postArray[indexPath.row].likes)"
             cell.viewsLabel.text = "Views: \(postArray[indexPath.row].views)"
-            cell.selectionStyle = .none
+            
+            cell.closuerForLikesCounting = {
+                
+                self.postArray[indexPath.row].likes += 1
+                tableView.reloadData()
+                
+            }
+            
+            cell.closuerForViewsCountingAndDetailwControllerPresent = {
+                
+                self.postArray[indexPath.row].views += 1
+                let postDetaileViewController = PostDetaileViewController()
+                postDetaileViewController.post = self.postArray[indexPath.row]
+                
+                postDetaileViewController.closuerForLikesCountingOnDetaileVC = {
+                    
+                    self.postArray[indexPath.row].likes += 1
+                    tableView.reloadData()
+                    
+                }
+                
+                self.present(postDetaileViewController, animated: true)
+                tableView.reloadData()
+
+            }
+            
             cellForReturn = cell
         }
         
         return cellForReturn
-    }
+    }    
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        
         if section == 0 {
             guard let profileHeaderView = self.profileHeaderView else { return UIView(frame: .zero) }
-            
             profileHeaderView.backgroundColor = .white
-            
             return  profileHeaderView
         }
+        
         if section == 1 {
             return UIView(frame: .zero)
         }
+        
         return UIView(frame: .zero)
+        
     }
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        
         if section == 0 {
             return 250
         }
@@ -132,40 +165,71 @@ extension ProfileViewController: UITableViewDelegate, UITableViewDataSource {
         if section == 1 {
             return 0
         }
+        
         return 0
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        
         if indexPath.section == 0 {
             let photosViewController = PhotosViewController()
             photosViewController.photos = PhotoGallery.getPhotoArray()
             self.navigationController?.pushViewController(photosViewController, animated: true)
         }
+        
+    }
+    
+    // метод для редактирования ячеек в таблице, в данном случае будет реализована возможность удалять ячейку свайпом справо налево
+    func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        
+        var valueForReturn = UISwipeActionsConfiguration()
+        
+        // исключаем возможность удалить ячейку с фотогалереей
+        if indexPath.section != 0 {
+            
+            //  действие удаления
+            let actionDelete = UIContextualAction(style: .destructive, title: "Удалить") { _,_,_ in
+
+                // удаляем конкретный пост из массива
+                self.postArray.remove(at: indexPath.row)
+
+                // обновляем таблицу
+                tableView.reloadData()
+            }
+            
+            // формируем экземпляр UISwipeActionsConfiguration
+            let actions = UISwipeActionsConfiguration(actions: [actionDelete] )
+            valueForReturn = actions
+            
+        }
+            
+        return valueForReturn
+        
     }
     
 }
 
-// MARK: - dismissKeyboard
-// это расширение возволяет скрыть клавиатуру при косании вне TextField.
+ // MARK: - dismissKeyboard
+ // это расширение возволяет скрыть клавиатуру при косании вне TextField.
 extension ProfileViewController {
-    
+
     func registerTapGestureRecognizerForHideKeyboard() {
         tableView.addGestureRecognizer(tap)
     }
-    
+
     @objc func dismissKeyboard() {
         tableView.endEditing(true)
         tableView.removeGestureRecognizer(tap)
     }
-    
+
     func registerForKeyboardNotifications() {
         NotificationCenter.default.addObserver(self, selector: #selector(kbWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
     }
-    
+
     func removeKeyboardNotifications() {
         NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillShowNotification, object: nil)
     }
-    
+
     @objc func kbWillShow(_ notification: Notification) {
         registerTapGestureRecognizerForHideKeyboard()
     }
@@ -201,7 +265,6 @@ extension ProfileViewController {
         // картинка в автарке
         imageViewForAnimationView = profileHeaderView.imageViewInAvatarImageView
         
-        
         // вью аватарки
         animatingView = {
             let avatarImageView = UIView(frame: CGRect(x: 16, y: 16, width: 110, height: 108))
@@ -211,24 +274,25 @@ extension ProfileViewController {
             avatarImageView.clipsToBounds = true
             return avatarImageView
         }()
+        
         // устанавливаем кординату "у" в соответствии с положением хедера таблицы относительно view
         animatingView.frame.origin.y += self.view.safeAreaInsets.top + self.getPositionOffset()
+        
         // сохраняем значение у в переменную для хранения и дальнейшего использования при обратной анимации
         tempY = animatingView.frame.origin.y
-        
-        
-        //          self.profileHeaderView.addSubview(animatingView)
         
         closeButton = {
             let closeButton = UIButton(frame: CGRect(x: self.view.frame.size.width - 56,
                                                      y: self.view.safeAreaInsets.top + 16,
                                                      width: 40,
                                                      height: 40))
-            closeButton.backgroundColor = .white
+            closeButton.backgroundColor = .clear
             closeButton.layer.cornerRadius = 20
+            
             let closeButtonAction = UIAction { _ in
                 self.startReversAnimation()
             }
+            
             closeButton.addAction(closeButtonAction, for: .allTouchEvents)
             
             let imageView = UIImageView(image: UIImage(systemName: "multiply.circle"))
@@ -244,13 +308,14 @@ extension ProfileViewController {
                                               y: self.view.safeAreaInsets.top + 16,
                                               width: 40,
                                               height: 40))
-        smallWhiteView.backgroundColor = .white
         
+        smallWhiteView.backgroundColor = .white
         self.view.addSubview(self.whiteViewForAnimation)
         self.view.addSubview(animatingView)
         animatingView.addSubview(imageViewForAnimationView)
         self.view.addSubview(closeButton)
         self.view.addSubview(smallWhiteView)
+        
     }
     
     func startAnimation() {
@@ -278,6 +343,7 @@ extension ProfileViewController {
         UIView.animate(withDuration: 0.3, delay: 0.5) {
             self.smallWhiteView.alpha = 0
         }
+        
         
     }
     
@@ -312,13 +378,18 @@ extension ProfileViewController {
             self.profileHeaderView.avatarImageView.addSubview(self.profileHeaderView.imageViewInAvatarImageView)
             self.profileHeaderView.avatarImageView.isHidden = false
             self.animatingView.isHidden = true
+            
         })
 
-    }
+        smallWhiteView.removeFromSuperview()
+        closeButton.removeFromSuperview()
+        
+    }    
     
-    
-    // Эта функция определяет офсет на который "сыграл" навинейшен бар при прокрутке таблицы
+    // MARK: - getPositionOffset()
+    // Эта функция определяет офсет на который "сыграл" навигейшен бар при прокрутке таблицы
     func getPositionOffset() -> CGFloat {
+        
         var valueForReturn: CGFloat = 0
         let cellRect = tableView.rectForRow(at: IndexPath(row: 0, section: 0))
         let y = cellRect.origin.y
@@ -328,9 +399,11 @@ extension ProfileViewController {
         if y_coordinate >= 272 {
             valueForReturn = 22
         }
+        
         if y_coordinate < 272 && y_coordinate >= 250 {
             valueForReturn = y_coordinate - 250
         }
+        
         return valueForReturn
     }
     

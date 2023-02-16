@@ -1,74 +1,68 @@
 //
-//  PostTableViewCell.swift
+//  PostDetaileViewController.swift
 //  Navigation
 //
-//  Created by Александр Мараенко on 26.12.2022.
+//  Created by Александр Мараенко on 16.02.2023.
 //
 
 import UIKit
 
-class PostTableViewCell: UITableViewCell {
+class PostDetaileViewController: UIViewController {
     
     var post = Post(author: "", description: "", image: "", likes: 0, views: 0)
     
     var authorLabel: UILabel!
-    var descriptionLabel: UILabel!
+    var descriptionLabel: UITextView!
     var imageViewForPicture: UIImageView!
     var likesLabel: UILabel!
     var viewsLabel: UILabel!
     var stackView: UIStackView!
     
-    var closuerForLikesCounting: (() -> Void)!
+    var closuerForLikesCountingOnDetaileVC: (() -> Void)!
     var closuerForViewsCountingAndDetailwControllerPresent: (() -> Void)!
     
     var tapOnImageViewForPicture: UITapGestureRecognizer!
     var tapOnLikesLabel: UITapGestureRecognizer!
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        view.backgroundColor = .white
 
-    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
-        super.init(style: style, reuseIdentifier: reuseIdentifier)
-                
-        cellSetting()
-        cellAddToContentView()
-        cellConstraintSettings()
-        gestureRecognizers()
+        viewSetting()
+        
+        addSubViews()
+        
+        elementsConstraintSettings()
+        
+        elementsContent()
+        
+        gestureRecognizer()
         
     }
     
-    func gestureRecognizers() {
-        
-        // imageViewForPicture
-        tapOnImageViewForPicture = UITapGestureRecognizer()
-        tapOnImageViewForPicture.addTarget(self, action: #selector(imageViewForPictureTap(_:)))
-        imageViewForPicture.addGestureRecognizer(tapOnImageViewForPicture)
+    func gestureRecognizer() {
         
         // likesLabel
         tapOnLikesLabel = UITapGestureRecognizer()
         tapOnLikesLabel.addTarget(self, action: #selector(likesLabelTap(_:)))
         likesLabel.addGestureRecognizer(tapOnLikesLabel)
-        
-    }
-
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
     }
     
-    @objc
-    func imageViewForPictureTap(_ gestureRecognizer: UITapGestureRecognizer) {
-        closuerForViewsCountingAndDetailwControllerPresent()
-        print("imageViewForPicture pressed - \(post.views + 1)")
-    }
     
     @objc
     func likesLabelTap(_ gestureRecognizer: UITapGestureRecognizer) {
         
-        closuerForLikesCounting()
+        closuerForLikesCountingOnDetaileVC()
         print("likesLabelTap - \(post.likes + 1)")
+        post.likes += 1
+        likesLabel.text = "Likes: \(post.likes)"
         
     }
 
     
     // MARK: - cellSetting
-    func cellSetting() {
+    func viewSetting() {
         
         authorLabel = {
             let authorLabel = UILabel(frame: .zero)
@@ -83,15 +77,14 @@ class PostTableViewCell: UITableViewCell {
             imageViewForPicture.backgroundColor = .black
             imageViewForPicture.contentMode = .scaleAspectFit
             imageViewForPicture.clipsToBounds = true
-            imageViewForPicture.isUserInteractionEnabled = true
+            imageViewForPicture.isUserInteractionEnabled = false
             return imageViewForPicture
         }()
         
         descriptionLabel = {
-            let descriptionLabel = UILabel(frame: .zero)
+            let descriptionLabel = UITextView(frame: .zero)
             descriptionLabel.font = .systemFont(ofSize: 14, weight: .medium)
             descriptionLabel.textColor = .systemGray
-            descriptionLabel.numberOfLines = 10
             return descriptionLabel
         }()
         
@@ -123,41 +116,53 @@ class PostTableViewCell: UITableViewCell {
         
     }
     
-    // MARK: - cellAddToContentView
-    func cellAddToContentView() {
-        contentView.addSubview(authorLabel)
-        contentView.addSubview(imageViewForPicture)
-        contentView.addSubview(descriptionLabel)
-        contentView.addSubview(stackView)
+    // MARK: - cellAddToview
+    func addSubViews() {
+        view.addSubview(authorLabel)
+        view.addSubview(imageViewForPicture)
+        view.addSubview(descriptionLabel)
+        view.addSubview(stackView)
         stackView.addArrangedSubview(likesLabel)
         stackView.addArrangedSubview(viewsLabel)
     }
     
     // MARK: - cellConstraintSettings
-    func cellConstraintSettings() {
+    func elementsConstraintSettings() {
         
         authorLabel.translatesAutoresizingMaskIntoConstraints = false
         imageViewForPicture.translatesAutoresizingMaskIntoConstraints = false
         descriptionLabel.translatesAutoresizingMaskIntoConstraints = false
         stackView.translatesAutoresizingMaskIntoConstraints = false
 
-        NSLayoutConstraint.activate([authorLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
-                                     authorLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 16),
-                                     authorLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
+        
+        NSLayoutConstraint.activate([authorLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
+                                     authorLabel.topAnchor.constraint(equalTo: view.topAnchor, constant: 16),
+                                     authorLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
+                                     authorLabel.heightAnchor.constraint(equalToConstant: 30),
                                      
-                                     imageViewForPicture.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
+                                     imageViewForPicture.centerXAnchor.constraint(equalTo: view.centerXAnchor),
                                      imageViewForPicture.topAnchor.constraint(equalTo: authorLabel.bottomAnchor, constant: 12),
-                                     imageViewForPicture.heightAnchor.constraint(equalTo: contentView.widthAnchor),
-                                     imageViewForPicture.widthAnchor.constraint(equalTo: contentView.widthAnchor),
+                                     imageViewForPicture.heightAnchor.constraint(equalTo: view.widthAnchor),
+                                     imageViewForPicture.widthAnchor.constraint(equalTo: view.widthAnchor),
                                      
-                                     descriptionLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
+                                     descriptionLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
                                      descriptionLabel.topAnchor.constraint(equalTo: imageViewForPicture.bottomAnchor, constant: 16),
-                                     descriptionLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
+                                     descriptionLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
                                      
-                                     stackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
+                                     stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
                                      stackView.topAnchor.constraint(equalTo: descriptionLabel.bottomAnchor, constant: 16),
-                                     stackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
-                                     stackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -12)])
+                                     stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
+                                     stackView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -20)])
+    }
+
+
+    func elementsContent() {
+         
+        authorLabel.text = post.author
+        imageViewForPicture.image = UIImage(named: post.image)
+        descriptionLabel.text = post.description
+        likesLabel.text = "Likes: \(post.likes)"
+        viewsLabel.text = "Views: \(post.views)"
         
     }
 

@@ -49,7 +49,6 @@ class ProfileHeaderView: UIView, UITextFieldDelegate {
         tapOnAvatarImageView.addTarget(self, action: #selector(tapOnAvatarImageViewFunc(_:)))
         avatarImageView.addGestureRecognizer(tapOnAvatarImageView)
         
-        // centerOfScreen = CGPoint()
     }
     
     

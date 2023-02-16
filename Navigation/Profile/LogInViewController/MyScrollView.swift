@@ -31,7 +31,6 @@ class MyScrollView: UIScrollView, UIScrollViewDelegate {
     
     var shakeAnimation = CABasicAnimation()
     
-    
     func settings()  {
         
         // contentView
@@ -100,7 +99,7 @@ class MyScrollView: UIScrollView, UIScrollViewDelegate {
             loginTextField.textColor = .black
             loginTextField.font = .systemFont(ofSize: 16)
             loginTextField.autocapitalizationType = .none
-            loginTextField.placeholder = "login@example.com"
+            loginTextField.placeholder = "loin: login@example.com, pass: 12345678"
             NSLayoutConstraint.activate([
                 loginTextField.centerXAnchor.constraint(equalTo: rectForTextFields.centerXAnchor),
                 loginTextField.topAnchor.constraint(equalTo: rectForTextFields.topAnchor, constant: 0),
@@ -262,18 +261,12 @@ extension MyScrollView {
         
         if !emailPred.evaluate(with: loginAsEmail) {
             return .invalidEmail
-        } else if loginAsEmail == "roga@kopita.ru" && pass == "12345678" {
+        } else if loginAsEmail == "login@example.com" && pass == "12345678" {
             return .ok
         } else {
             return .nok
         }
     }
-//
-//
-//    // функция проверяет какие символы введены в текстовые поля
-//    @objc func loginTextFieldEditingChanged(_ textField: UITextField) {
-//
-//    }
     
     
     // функция проверяет какие символы введены в текстовые поля
@@ -307,8 +300,8 @@ extension MyScrollView {
             default:
                 labelAboutSixChar.isHidden = true
             }
-        }
-        else {
+            
+        } else {
             // если символов больше пяти скываем/неОтображаем лейбл активируем кнопку
             labelAboutSixChar.isHidden = true
             button.isEnabled = true
