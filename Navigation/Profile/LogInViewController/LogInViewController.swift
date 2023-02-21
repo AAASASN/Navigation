@@ -44,8 +44,25 @@ class LogInViewController: UIViewController {
         
         
         scrollView.button.addAction(UIAction(handler: { _ in
-            let profileViewController = ProfileViewController()
-            self.navigationController?.pushViewController(profileViewController, animated: true)
+            
+            switch self.scrollView.checkLoginAndPass() {
+            case .invalidEmail :
+                let alertController = UIAlertController(title: "Ошибка ввода", message: "Не верный формат ввода email", preferredStyle: .alert)
+                let alertAction = UIAlertAction(title: "Попробовать снова", style: .default)
+                alertController.addAction(alertAction)
+                self.present(alertController, animated: true)
+            case .nok :
+                let alertController = UIAlertController(title: "Ошибка ввода", message: "Не верный логин или пароль", preferredStyle: .alert)
+                let alertAction = UIAlertAction(title: "Попробовать снова", style: .default)
+                alertController.addAction(alertAction)
+                self.present(alertController, animated: true)
+            case .ok :
+                let profileViewController = ProfileViewController()
+                self.navigationController?.pushViewController(profileViewController, animated: true)
+            case .void : print("void")
+            }
+            
+
         }), for: .touchUpInside)
         
         tap = UITapGestureRecognizer(target: self, action: #selector(self.dismissKeyboard))
