@@ -23,23 +23,11 @@ class LogInViewController: UIViewController {
         scrollView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(scrollView)
         NSLayoutConstraint.activate([
-            
-            // вариант при котором горизонтальный режим выгрядит хорошо, но нет реакции при нажатии
-            // на текстФилды и кнопку
-//            scrollView.heightAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.heightAnchor),
-//            scrollView.leadingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leadingAnchor),
-//            scrollView.trailingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.trailingAnchor),
-//            scrollView.widthAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.widthAnchor)
-            
-            // вариант при котором горизонтальный режим выгрядит плохо и есть заступы за сейфэрию, но
-            // при нажатии на текстФилды появляется клавиатура но не работает кнопка
             scrollView.heightAnchor.constraint(equalTo: view.heightAnchor, constant: view.safeAreaInsets.top),
             scrollView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: view.safeAreaInsets.left),
             scrollView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: view.safeAreaInsets.right),
             scrollView.widthAnchor.constraint(equalTo: self.view.widthAnchor)
-            
-
-            
+ 
         ])
         
         
